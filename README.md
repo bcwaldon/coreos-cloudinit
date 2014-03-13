@@ -32,7 +32,7 @@ All are optional strings unless otherwise noted:
 - **primary-group**: Default group for the user. Defaults to a new group created named after the user.
 - **groups**: Add user to these additional groups
 - **no-user-group**: Boolean. Skip default group creation.
-- **ssh-authorized-key**: Public SSH key to authorize for this user
+- **ssh-authorized-keys**: List of public SSH keys to authorize for this user
 - **system**: Create the user as a system user. No home directory will be created.
 - **inactive**: Deactivate the user upon creation
 - **no-log-init**: Boolean. Skip initialization of lastlog and faillog databases.
@@ -132,7 +132,8 @@ users:
 	groups: 
 	  - staff
 	  - docker
-	ssh-authorized-key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0g+ZTxC7weoIJLUafOgrm+h...
+	ssh-authorized-keys:
+	  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0g+ZTxC7weoIJLUafOgrm+h...
 ```
 
     
