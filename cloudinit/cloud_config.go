@@ -18,6 +18,7 @@ type CloudConfig struct {
 	}
 	Write_Files []WriteFile
 	Hostname    string
+	Users       []User
 }
 
 func NewCloudConfig(contents []byte) (*CloudConfig, error) {

@@ -164,3 +164,40 @@ func TestCloudConfigSerializationHeader(t *testing.T) {
 		t.Fatalf("Serialized config did not have expected header")
 	}
 }
+
+func TestCloudConfigUsers(t *testing.T) {
+	contents := []byte(`
+users:
+  - name: elroy
+    passwd: somehash
+    ssh-authorized-keys:
+      - somekey
+`)
+	cfg, err := NewCloudConfig(contents)
+	if err != nil {
+		t.Fatalf("Encountered unexpected error: %v", err)
+	}
+
+	if len(cfg.Users) != 1 {
+		t.Fatalf("Parsed %d users, expected 1", cfg.Users)
+	}
+
+	user := cfg.Users[0]
+
+	if name := user.Name; name != "elroy" {
+		t.Errorf("User name is %q, expected 'elroy'", name)
+	}
+
+	if passwd := user.PasswordHash; passwd != "somehash" {
+		t.Errorf("User passwd is %q, expected 'somehash'", passwd)
+	}
+
+	if keys := user.SSHAuthorizedKeys; len(keys) != 1 {
+		t.Errorf("Parsed %d ssh keys, expected 1", len(keys))
+	} else {
+		key := user.SSHAuthorizedKeys[0]
+		if key != "somekey" {
+			t.Errorf("User SSH key is %q, expected 'somekey'", key)
+		}
+	}
+}
