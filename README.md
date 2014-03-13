@@ -32,7 +32,7 @@ All are optional strings unless otherwise noted:
 - **primary-group**: Default group for the user. Defaults to a new group created named after the user.
 - **groups**: Add user to these additional groups
 - **no-user-group**: Boolean. Skip default group creation.
-- **ssh-authorized-keys**: List of public SSH keys to authorize for this user
+- **ssh-authorized-key**: Public SSH key to authorize for this user
 - **system**: Create the user as a system user. No home directory will be created.
 - **inactive**: Deactivate the user upon creation
 - **no-log-init**: Boolean. Skip initialization of lastlog and faillog databases.
@@ -46,11 +46,21 @@ The following fields are not yet implemented:
 
 ##### Generating a password hash
 
-You can generate a safe hash via:
+Generating a safe hash is important to the security of your system.  Currently with updated tools like [oclhashcat](http://hashcat.net/oclhashcat/) simplified hashes like md5crypt are trivial to crack on modern GPU hardware.  You can generate a "safer" (read: not safe, never publish your hashes publicly) hash via:
 
-    mkpasswd --method=SHA-512 --rounds=4096
+###### On Debian/Ubuntu (via the package "whois")
+    `mkpasswd --method=SHA-512 --rounds=4096`
 
-Using a higher number of rounds will help create more secure passwords, but given enough time, password hashes can be reversed.
+###### With OpenSSL (note: this will only make md5crypt.  While better than plantext it should not be considered fully secure)
+    `openssl passwd -1`
+
+###### With Python (change password and salt values)
+    `python -c "import crypt, getpass, pwd; print crypt.crypt('password', '\$6\$SALT\$')"`
+
+###### With Perl (change password and salt values)
+    `perl -e 'print crypt("password","\$6\$SALT\$") . "\n"'`
+
+Using a higher number of rounds will help create more secure passwords, but given enough time, password hashes can be reversed.  On most RPM based distributions there is a tool called mkpasswd available in the `expect` package, but this does not handle "rounds" nor advanced hashing algorithms. 
 
 
 ### Custom cloud-config Parameters
@@ -132,8 +142,7 @@ users:
 	groups: 
 	  - staff
 	  - docker
-	ssh-authorized-keys:
-	  - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0g+ZTxC7weoIJLUafOgrm+h...
+	ssh-authorized-key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0g+ZTxC7weoIJLUafOgrm+h...
 ```
 
     
